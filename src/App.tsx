@@ -1,19 +1,36 @@
-import React from "react";
-import TabbedButtons from "./TabbedButtons";
-import "./App.css";
+// App.tsx
+import React, { useState } from "react";
+import TabbedButtons from "./TabbedButtons"; // Adjust import path as necessary
 
 const App: React.FC = () => {
+  const [activeTab, setActiveTab] = useState("Solana"); // Default active tab
+  const [rpcUrl, setRpcUrl] = useState(""); // State to hold RPC URL
+
+  const customTabs = [
+    {
+      name: "Solana",
+      rpcUrl: "https://api.devnet.solana.com",
+      iconSrc: "sol.png",
+    },
+    {
+      name: "Eclipse",
+      rpcUrl: "https://staging-rpc.dev.eclipsenetwork.xyz",
+      iconSrc: "eclipse.jpg",
+    },
+  ];
+
+  const handleTabClick = (tabName: string) => {
+    setActiveTab(tabName);
+  };
+
   return (
-    <div className="App">
-      <div className="hero min-h-screen bg-base-200">
-        <div className="hero-content text-center">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold">Switching Chains</h1>
-            <div className="divider divider-error">Select chain to view</div>
-            <TabbedButtons />
-          </div>
-        </div>
-      </div>
+    <div>
+      <TabbedButtons
+        tabs={customTabs}
+        activeTab={activeTab}
+        onTabClick={handleTabClick}
+      />
+      {/* You can use rpcUrl elsewhere in your program */}
     </div>
   );
 };

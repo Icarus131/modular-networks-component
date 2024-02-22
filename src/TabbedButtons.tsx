@@ -1,60 +1,51 @@
-import React, { useState, useEffect } from "react";
+// TabbedButtons.tsx
+import React, { useEffect } from "react";
 
-interface RpcUrls {
-  [key: string]: string;
+interface Tab {
+  name: string;
+  rpcUrl: string;
+  iconSrc: string;
 }
 
-const TabbedButtons: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("Solana");
+interface TabbedButtonsProps {
+  tabs: Tab[];
+  activeTab: string;
+  onTabClick: (tabName: string) => void;
+}
 
-  const handleTabClick = (tabName: string) => {
-    setActiveTab(tabName);
-  };
-
+const TabbedButtons: React.FC<TabbedButtonsProps> = ({
+  tabs,
+  activeTab,
+  onTabClick,
+}) => {
   useEffect(() => {
-    const rpcUrls: RpcUrls = {
-      Solana: "https://api.devnet.solana.com",
-      Eclipse: "https://staging-rpc.dev.eclipsenetwork.xyz",
-    };
-
-    const rpcUrl = rpcUrls[activeTab];
-    connectToBlockchain(rpcUrl);
-  }, [activeTab]);
-
-  const connectToBlockchain = (rpcUrl: string) => {
-    console.log(`Connecting to blockchain with RPC URL: ${rpcUrl}`);
-    // Make calls here using the rpcUrl string that has already been passed to the function
-  };
+    const activeTabInfo = tabs.find((tab) => tab.name === activeTab);
+    if (activeTabInfo) {
+      console.log(`Using RPC URL: ${activeTabInfo.rpcUrl}`);
+      // Make calls here using the activeTabInfo.rpcUrl
+    }
+  }, [activeTab, tabs]);
 
   return (
     <div>
       <div role="tablist" className="tabs tabs-boxed">
-        <a
-          role="tab"
-          className={`tab ${activeTab === "Solana" ? "tab-active" : ""}`}
-          onClick={() => handleTabClick("Solana")}
-        >
-          <img
-            src="sol.png"
-            alt="solana logo"
-            className="tab-icon"
-            width={30}
-          />
-          Solana
-        </a>
-        <a
-          role="tab"
-          className={`tab ${activeTab === "Eclipse" ? "tab-active" : ""}`}
-          onClick={() => handleTabClick("Eclipse")}
-        >
-          <img
-            src="eclipse.jpg"
-            alt="Eclipse Logo"
-            className="tab-icon"
-            width={30}
-          />
-          Eclipse
-        </a>
+        {tabs.map((tab) => (
+          <a
+            key={tab.name}
+            role="tab"
+            className={`tab ${activeTab === tab.name ? "tab-active" : ""}`}
+            onClick={() => onTabClick(tab.name)}
+          >
+            <img
+              src={tab.iconSrc}
+              alt={`${tab.name} logo`}
+              className="tab-icon"
+              width={30}
+              padding-right={10}
+            />
+            {tab.name}
+          </a>
+        ))}
       </div>
     </div>
   );
